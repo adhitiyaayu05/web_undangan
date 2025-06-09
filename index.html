@@ -721,8 +721,13 @@ body {
                 font-size: 0.8rem;
                 min-width: 100px;
             }
-        }
-
+            }
+            
+            @media (max-width: 768px) {
+            .story-item {
+            margin-bottom: 2rem; /* Tambahkan jarak */
+            }
+            }
         /* Gallery */
         .gallery-grid {
             display: grid;
@@ -745,7 +750,7 @@ body {
             position: relative;
             border-radius: 15px;
             overflow: hidden;
-            height: 300px;
+            height: auto;
             background: linear-gradient(45deg, #d4a574, #f8e1d4);
             display: flex;
             align-items: center;
@@ -759,6 +764,13 @@ body {
         .gallery-item:hover {
             transform: scale(1.05);
         }
+        @media (max-width: 768px) {
+        .gallery-item {
+        height: auto; /* Biarkan tinggi menyesuaikan */
+        aspect-ratio: 1/1; /* Pertahankan rasio persegi */
+        }
+        }
+
 
         /* Event Details */
         .event-cards {
@@ -864,7 +876,14 @@ body {
             max-width: 1200px;
             margin: 0 auto;
         }
-
+        @media (max-width: 480px) {
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+        padding: 15px; /* Lebih besar untuk jari */
+        font-size: 16px; /* Hindari zoom otomatis di iOS */
+        }
+        } 
         /* Navigation */
         .nav-tabs {
             display: flex;
@@ -1405,7 +1424,10 @@ body {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
         }
-
+        
+        button, a {
+            touch-action: manipulation;
+        }
         /* Modal */
         .modal {
             display: none;
@@ -1959,14 +1981,13 @@ body {
         
 
         // Loading Screen
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                }, 1000);
-            }, 2000);
-        });
+           setTimeout(() => {
+           document.getElementById('loadingScreen').style.opacity = '0';
+           setTimeout(() => {
+           document.getElementById('loadingScreen').style.display = 'none';
+           }, 500); // Lebih cepat
+           }, 1000); // Dari 2000 jadi 1000
+
 
         // Tanggal dan waktu pernikahan: 14 Juni 2025, jam 08:00 WIB
         const weddingDate = new Date('2025-06-14T08:00:00').getTime();
@@ -2037,7 +2058,10 @@ body {
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');
         });
-
+        navLinks.addEventListener('click', () => {
+        navLinks.classList.remove('mobile-active');
+        mobileMenuBtn.querySelector('i').classList.replace('fa-times', 'fa-bars');
+        });
         // Close mobile menu when clicking on links
         navLinks.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
