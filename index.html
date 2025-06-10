@@ -54,131 +54,166 @@ body {
 }
 
 /* Header dengan parallax - FIXED */
-.hero {
-    height: 100vh;
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23f8e1d4" width="1200" height="800"/><circle fill="%23d4a574" cx="300" cy="200" r="50" opacity="0.6"/><circle fill="%23d4a574" cx="900" cy="600" r="70" opacity="0.4"/><path fill="%23c9956b" d="M0,400 Q300,350 600,400 T1200,400 V800 H0 V400" opacity="0.3"/></svg>');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-    /* ADDED: Proper z-index and positioning */
-    z-index: 1;
-}
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23f8e1d4" width="1200" height="800"/><circle fill="%23d4a574" cx="300" cy="200" r="50" opacity="0.6"/><circle fill="%23d4a574" cx="900" cy="600" r="70" opacity="0.4"/><path fill="%23c9956b" d="M0,400 Q300,350 600,400 T1200,400 V800 H0 V400" opacity="0.3"/></svg>');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
 
-.hero-content {
-    /* ADDED: Proper positioning */
-    position: relative;
-    z-index: 2;
-}
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
 
-.hero-content h1 {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    animation: float 3s ease-in-out infinite;
-}
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: float 3s ease-in-out infinite;
+        }
 
-.hero-content p {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
 
-.countdown-container {
-    background: rgba(0,0,0,0.7);
-    padding: 2rem;
-    border-radius: 15px;
-    margin-top: 2rem;
-    backdrop-filter: blur(10px);
-    /* ADDED: Proper positioning */
-    position: relative;
-    z-index: 3;
-}
+        .countdown-container {
+            background: rgba(0,0,0,0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 3;
+        }
 
-.countdown-container h3 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: #f8e1d4;
-}
+        .countdown-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #f8e1d4;
+        }
 
-.countdown-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
-}
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
 
-.countdown-item {
-    text-align: center;
-    background: rgba(255,255,255,0.1);
-    padding: 1rem;
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
-    transition: transform 0.3s ease;
-}
+        .countdown-item {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
 
-.countdown-item:hover {
-    transform: scale(1.05);
-}
+        .countdown-item:hover {
+            transform: scale(1.05);
+        }
 
-.countdown-number {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #f8e1d4;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f8e1d4;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
 
-.countdown-label {
-    font-size: 0.9rem;
-    color: white;
-    margin-top: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+        .countdown-label {
+            font-size: 0.9rem;
+            color: white;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.wedding-date {
-    margin-top: 1rem;
-    font-size: 1.1rem;
-    color: #f8e1d4;
-    font-style: italic;
-}
+        .wedding-date {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: #f8e1d4;
+            font-style: italic;
+        }
 
-.celebration-message {
-    display: none;
-    background: rgba(255,215,0,0.9);
-    color: #333;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-top: 2rem;
-    backdrop-filter: blur(10px);
-}
+        .celebration-message {
+            display: none;
+            background: rgba(255,215,0,0.9);
+            color: #333;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
 
-.celebration-message h3 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #d4a574;
-}
+        .celebration-message h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #d4a574;
+        }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
+        .current-time {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #ccc;
+            font-style: italic;
+        }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
 
-@keyframes celebration {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    25% { transform: scale(1.1) rotate(2deg); }
-    75% { transform: scale(1.1) rotate(-2deg); }
-}
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(2deg); }
+            75% { transform: scale(1.1) rotate(-2deg); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+            }
+        }
 
 /* Navigation - FIXED */
 .navbar {
@@ -1534,11 +1569,19 @@ body {
         </div>
     </nav>
 
-    <!-- Hero Section -->
-     <section class="hero" id="home">
+    <!-- Debug Info -->
+    <div class="debug-info" id="debugInfo">
+        <div>Waktu Sekarang: <span id="currentTimeDebug"></span></div>
+        <div>Target: Sabtu, 14 Juni 2025 - 07:00 WIB</div>
+        <div>Selisih: <span id="timeDifference"></span></div>
+    </div>
+
+   <!-- Hero Section -->
+    <section class="hero" id="home">
         <div class="hero-content fade-in">
             <h1>Dilla & Majid</h1>
             <p>Menikah adalah ikatan suci yang menghubungkan dua hati</p>
+            
             <div class="countdown-container" id="countdownContainer">
                 <h3>Menuju Hari Bahagia</h3>
                 <div class="wedding-date">
@@ -1562,12 +1605,14 @@ body {
                         <div class="countdown-label">Detik</div>
                     </div>
                 </div>
+                <div class="current-time" id="currentTime"></div>
             </div>
-            
-            <!-- Pesan ketika hari H tiba -->
+
+            <!-- Celebration Message (hidden by default) -->
             <div class="celebration-message" id="celebrationMessage">
-                <h3>🎉 Selamat Hari Pernikahan! 🎉</h3>
-                <p>Hari yang ditunggu-tunggu telah tiba! Semoga pernikahan Dilla & Majid dipenuhi dengan kebahagiaan, cinta, dan berkah yang melimpah.</p>
+                <h3>🎉 Hari Bahagia Telah Tiba! 🎉</h3>
+                <p>Selamat untuk Dilla & Majid!</p>
+                <p>Semoga pernikahan kalian dipenuhi kebahagiaan dan berkah.</p>
             </div>
         </div>
     </section>
@@ -1981,21 +2026,73 @@ body {
            }, 1000); // Dari 2000 jadi 1000
 
 
-        // Tanggal dan waktu pernikahan: 14 Juni 2025, jam 08:00 WIB
-        const weddingDate = new Date('2025-06-14T08:00:00').getTime();
+         // Fungsi untuk mendapatkan waktu dalam timezone WIB (UTC+7)
+        function getWIBTime() {
+            const now = new Date();
+            // Konversi ke WIB (UTC+7)
+            const wibTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+            return wibTime;
+        }
+
+        // Tanggal dan waktu pernikahan: 14 Juni 2025, jam 07:00 WIB
+        // Membuat date object untuk 14 Juni 2025 pukul 07:00 WIB
+        const weddingDate = new Date('2025-06-14T00:00:00.000Z'); // UTC time
+        weddingDate.setUTCHours(0, 0, 0, 0); // Set ke midnight UTC
+        weddingDate.setUTCHours(7 - 7); // 07:00 WIB = 00:00 UTC (7-7=0)
+        weddingDate.setUTCHours(7); // Sebenarnya 07:00 UTC untuk 14:00 WIB, tapi kita ingin 07:00 WIB
+        
+        // Cara yang lebih mudah dan akurat:
+        const targetWeddingDate = new Date(2025, 5, 14, 7, 0, 0, 0); // Month is 0-indexed, so 5 = June
 
         function updateCountdown() {
-            // Mendapatkan waktu saat ini
-            const now = new Date().getTime();
+            // Mendapatkan waktu saat ini dalam WIB
+            const now = new Date();
             
-            // Menghitung selisih waktu
-            const distance = weddingDate - now;
+            // Menghitung selisih waktu dalam milidetik
+            const distance = targetWeddingDate.getTime() - now.getTime();
+
+            // Update debug info
+            const currentTimeElement = document.getElementById('currentTimeDebug');
+            const timeDifferenceElement = document.getElementById('timeDifference');
+            
+            if (currentTimeElement) {
+                currentTimeElement.textContent = now.toLocaleString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'Asia/Jakarta'
+                });
+            }
+
+            if (timeDifferenceElement) {
+                timeDifferenceElement.textContent = `${Math.floor(distance / (1000 * 60 * 60 * 24))} hari, ${Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))} jam`;
+            }
+
+            // Update current time display
+            const currentTimeDisplay = document.getElementById('currentTime');
+            if (currentTimeDisplay) {
+                currentTimeDisplay.textContent = `Sekarang: ${now.toLocaleString('id-ID', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'Asia/Jakarta'
+                })} WIB`;
+            }
 
             // Jika waktu sudah berlalu (hari H sudah tiba atau lewat)
             if (distance < 0) {
                 document.getElementById('countdownContainer').style.display = 'none';
-                document.getElementById('celebrationMessage').style.display = 'block';
-                document.getElementById('celebrationMessage').style.animation = 'celebration 2s infinite';
+                const celebrationElement = document.getElementById('celebrationMessage');
+                celebrationElement.style.display = 'block';
+                celebrationElement.style.animation = 'celebration 2s infinite';
                 return;
             }
 
@@ -2006,17 +2103,23 @@ body {
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Menampilkan hasil dengan format 2 digit
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            const daysElement = document.getElementById('days');
+            const hoursElement = document.getElementById('hours');
+            const minutesElement = document.getElementById('minutes');
+            const secondsElement = document.getElementById('seconds');
+
+            if (daysElement) daysElement.textContent = days.toString().padStart(2, '0');
+            if (hoursElement) hoursElement.textContent = hours.toString().padStart(2, '0');
+            if (minutesElement) minutesElement.textContent = minutes.toString().padStart(2, '0');
+            if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
 
             // Menambahkan efek pulse pada detik
-            const secondElement = document.getElementById('seconds');
-            secondElement.style.animation = 'pulse 1s ease-in-out';
-            setTimeout(() => {
-                secondElement.style.animation = '';
-            }, 1000);
+            if (secondsElement) {
+                secondsElement.style.animation = 'pulse 1s ease-in-out';
+                setTimeout(() => {
+                    secondsElement.style.animation = '';
+                }, 1000);
+            }
         }
 
         // Menjalankan countdown setiap detik
@@ -2025,81 +2128,17 @@ body {
         // Menjalankan countdown pertama kali saat halaman dimuat
         updateCountdown();
 
-        // Menampilkan informasi debug di console (opsional)
+        // Menampilkan informasi debug di console
         console.log('Wedding Countdown Started!');
-        console.log('Target Date:', new Date('2025-06-14T08:00:00'));
+        console.log('Target Date:', targetWeddingDate);
         console.log('Current Time:', new Date());
-        
-        // Navigation
-        const navbar = document.getElementById('navbar');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
+        console.log('Time difference in ms:', targetWeddingDate.getTime() - new Date().getTime());
+        console.log('Days remaining:', Math.floor((targetWeddingDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)));
 
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+        // Event listener untuk menyembunyikan debug info dengan double click
+        document.getElementById('debugInfo').addEventListener('dblclick', function() {
+            this.style.display = this.style.display === 'none' ? 'block' : 'none';
         });
-
-        // Mobile Menu
-        mobileMenuBtn.addEventListener('click', function() {
-            navLinks.classList.toggle('mobile-active');
-            const icon = this.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-        });
-        navLinks.addEventListener('click', () => {
-        navLinks.classList.remove('mobile-active');
-        mobileMenuBtn.querySelector('i').classList.replace('fa-times', 'fa-bars');
-        });
-        // Close mobile menu when clicking on links
-        navLinks.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A') {
-                navLinks.classList.remove('mobile-active');
-                mobileMenuBtn.querySelector('i').classList.remove('fa-times');
-                mobileMenuBtn.querySelector('i').classList.add('fa-bars');
-            }
-        });
-
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Countdown Timer
-        function updateCountdown() {
-            const weddingDate = new Date('2025-06-15T08:00:00').getTime();
-            const now = new Date().getTime();
-            const difference = weddingDate - now;
-
-            if (difference > 0) {
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-                document.getElementById('days').textContent = days.toString().padStart(2, '0');
-                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            } else {
-                document.getElementById('countdown').innerHTML = '<h3 style="color: #d4a574;">Hari Bahagia Telah Tiba! 💕</h3>';
-            }
-        }
-
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
 
         // Animation on scroll
         function animateOnScroll() {
