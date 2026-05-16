@@ -11,12 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- ============================================================
-     FIREBASE — GANTI CONFIG INI DENGAN MILIKMU!
-     Cara setup: lihat komentar di bagian JavaScript di bawah.
-     ============================================================ -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<!-- JSONBin digunakan sebagai backend buku tamu — tidak perlu library tambahan -->
 
 <style>
 /* ================================================================
@@ -791,10 +786,10 @@ footer { background:var(--dark); color:rgba(255,255,255,.82); text-align:center;
     <div class="gb-box rv">
       <h3><i class="fas fa-pen" style="color:var(--gold);margin-right:.5rem"></i> Kirim Pesan &amp; Doa</h3>
       
-      <!-- Firebase notice — hilang otomatis jika Firebase dikonfigurasi -->
-      <div class="fb-notice" id="fbNotice">
+      <!-- Setup notice — tersembunyi otomatis jika JSONBin sudah dikonfigurasi -->
+      <div class="fb-notice" id="setupNotice" style="display:none">
         <i class="fas fa-info-circle"></i>
-        <span id="fbNoticeText">Firebase belum dikonfigurasi. Pesan saat ini tersimpan di perangkat ini saja. Setup Firebase untuk buku tamu bersama — lihat panduan di dalam file HTML.</span>
+        <span>Buku tamu belum terhubung ke server. Ikuti panduan setup JSONBin di dalam file HTML (cari kata "PANDUAN SETUP").</span>
       </div>
 
       <form id="gbForm" onsubmit="submitGB(event)">
@@ -921,74 +916,63 @@ footer { background:var(--dark); color:rgba(255,255,255,.82); text-align:center;
 
 <script>
 /* ================================================================
-   FIREBASE CONFIGURATION
-   ================================================================
-   CARA SETUP FIREBASE (Gratis, untuk buku tamu bersama):
-   
-   1. Buka https://console.firebase.google.com
-   2. Klik "Add project" → beri nama (misal: wedding-dilla-majid)
-   3. Disable Google Analytics → Create Project
-   4. Klik ikon "</>" (Web App) → beri nickname → Register
-   5. Salin firebaseConfig yang muncul → tempel di bawah ini
-   6. Di sidebar Firebase: Build → Firestore Database
-   7. Create Database → Start in TEST mode → pilih region (asia-southeast2)
-   8. Klik "Rules" → ubah:
-      allow read, write: if true;
-      → Publish
-   9. Selesai! Semua pengunjung bisa baca & tulis pesan.
-   ================================================================ */
+   ╔══════════════════════════════════════════════════════════════╗
+   ║    KONFIGURASI BUKU TAMU — ISI 3 NILAI DI BAWAH INI        ║
+   ╠══════════════════════════════════════════════════════════════╣
+   ║                                                             ║
+   ║  JSONBIN_ID   → Bin ID dari halaman BINS                    ║
+   ║                 (contoh: "6a08af97250b1311c35d9a55")        ║
+   ║                                                             ║
+   ║  JSONBIN_KEY  → Salin dari API Keys → bagian X-MASTER-KEY   ║
+   ║                 (bukan X-Access-Key! pakai yang atas)       ║
+   ║                                                             ║
+   ║  JSONBIN_KEY_TYPE → jangan diubah, biarkan "X-Master-Key"   ║
+   ║                                                             ║
+   ║  PENTING: Setelah isi, buka Bins → klik ikon 🔒 pada bin   ║
+   ║  kamu → pilih "Make Public" supaya siapapun bisa membaca.  ║
+   ╚══════════════════════════════════════════════════════════════╝
+================================================================ */
 
-const firebaseConfig = {
-  apiKey: "GANTI_API_KEY",
-  authDomain: "GANTI.firebaseapp.com",
-  projectId: "GANTI_PROJECT_ID",
-  storageBucket: "GANTI.appspot.com",
-  messagingSenderId: "GANTI",
-  appId: "GANTI"
-};
+const JSONBIN_ID       = "6a08af97250b1311c35d9a55";    // ← Bin ID dari halaman Bins
+const JSONBIN_KEY      = "$2a$10$AsFw8YVQmaEyLQ3Lumwz0.dnNfO73uvku4RU9rmF8PUSW.oT89GLq";        // ← Nilai X-MASTER-KEY (bagian atas di API Keys)
+const JSONBIN_KEY_TYPE = "X-Master-Key";     // ← Jangan diubah
 
-// Cek apakah sudah dikonfigurasi
-const fbReady = firebaseConfig.apiKey !== "GANTI_API_KEY";
-let db = null;
+/* ================================================================
+   NOMOR WHATSAPP PENERIMA RSVP
+================================================================ */
+const WA_NUMBER = "6285133797125";
 
-if (fbReady) {
-  try {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    // Sembunyikan notice jika Firebase siap
-    const notice = document.getElementById('fbNotice');
-    if(notice) notice.style.display = 'none';
-  } catch(e) { console.warn("Firebase error:", e); }
+/* ================================================================
+   KONFIGURASI INTERNAL — tidak perlu diubah
+================================================================ */
+const GB_READY = JSONBIN_ID !== "GANTI_BIN_ID" && JSONBIN_KEY !== "GANTI_KEY";
+const JB_BASE  = "https://api.jsonbin.io/v3/b";
+
+function jbHeadRead() {
+  return { [JSONBIN_KEY_TYPE]: JSONBIN_KEY };
+}
+function jbHeadWrite() {
+  return { "Content-Type": "application/json", [JSONBIN_KEY_TYPE]: JSONBIN_KEY };
 }
 
 /* ================================================================
-   NOMOR WHATSAPP PENGANTIN
-   Format: 628xxxxxxxxx (62 = kode Indonesia, tanpa 0 di depan)
-   Contoh: 0812-3456-7890 → 6281234567890
-   ================================================================ */
-const WA_NUMBER = "628XXXXXXXXXX"; // ← GANTI INI
-
-/* ================================================================
-   SAMPLE MESSAGES (tampil saat Firebase belum dikonfigurasi)
-   ================================================================ */
-const sampleMsgs = [
-  { id:"s1", name:"Keluarga Besar Lampung", message:"Selamat menempuh hidup baru ya jul! Semoga Allah SWT selalu memberkahi rumah tangga kalian. Barakallahu lakuma wa baraka alaykuma.", ts: 1748822400 },
-  { id:"s2", name:"Teman Kuliah",           message:"Dilla & Majid, so happy for you both! Kalian pasangan yang perfect. Semoga langgeng sampai kakek nenek ya!", ts: 1748736000 },
-  { id:"s3", name:"Ayu",                    message:"Happy Wedding ya mas ijul! Semoga rumah tangga nya bisa selalu samawa, dan semoga selalu bahagia dunia akhirat bersama mba Dilla.", ts: 1748649600 }
-];
-
-/* ================================================================
-   GUESTBOOK
-   ================================================================ */
-function getLocalMsgs() {
-  try { return JSON.parse(localStorage.getItem('dilla_majid_gb') || '[]'); }
-  catch { return []; }
-}
-function saveLocalMsg(m) {
-  const a = getLocalMsgs(); a.unshift(m);
-  try { localStorage.setItem('dilla_majid_gb', JSON.stringify(a.slice(0,60))); } catch{}
+   HELPER
+================================================================ */
+function esc(s) {
+  const d = document.createElement('div');
+  d.appendChild(document.createTextNode(s || ''));
+  return d.innerHTML;
 }
 
+function fmtDate(ts) {
+  // ts bisa berupa ms timestamp (number) atau ISO string
+  const d = typeof ts === 'number' ? new Date(ts) : new Date(ts);
+  return isNaN(d) ? '-' : d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+}
+
+/* ================================================================
+   RENDER PESAN
+================================================================ */
 function renderMsgs(list) {
   const c = document.getElementById('msgList');
   if (!list || list.length === 0) {
@@ -996,64 +980,110 @@ function renderMsgs(list) {
     return;
   }
   c.innerHTML = list.map(m => {
-    const init = (m.name||'A').charAt(0).toUpperCase();
-    const ts   = m.ts ? new Date(m.ts*1000) : (m.timestamp?.seconds ? new Date(m.timestamp.seconds*1000) : new Date());
-    const date = ts.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+    const init = (m.name || 'A').charAt(0).toUpperCase();
+    const date = m.date || fmtDate(m.ts || Date.now());
     return `<div class="mcard">
       <div class="mcard-head">
         <div class="mava">${init}</div>
-        <div><div class="mname">${esc(m.name)}</div><div class="mtime">${date}</div></div>
+        <div>
+          <div class="mname">${esc(m.name)}</div>
+          <div class="mtime">${date}</div>
+        </div>
       </div>
       <div class="mtext">"${esc(m.message)}"</div>
     </div>`;
   }).join('');
 }
 
-function esc(s) {
-  const d = document.createElement('div');
-  d.appendChild(document.createTextNode(s||''));
-  return d.innerHTML;
-}
+/* ================================================================
+   LOAD BUKU TAMU dari JSONBin
+================================================================ */
+async function loadGB() {
+  const notice = document.getElementById('setupNotice');
 
-function loadGB() {
-  if (fbReady && db) {
-    db.collection('guestbook').orderBy('timestamp','desc').limit(60)
-      .onSnapshot(snap => {
-        const msgs = snap.docs.map(d => ({id:d.id,...d.data()}));
-        renderMsgs(msgs.length ? msgs : sampleMsgs);
-      }, () => renderMsgs([...getLocalMsgs(),...sampleMsgs]));
-  } else {
-    const local = getLocalMsgs();
-    const combined = [...local, ...sampleMsgs.filter(s => !local.find(l=>l.id===s.id))];
-    renderMsgs(combined);
+  if (!GB_READY) {
+    if (notice) notice.style.display = 'flex';
+    document.getElementById('msgList').innerHTML =
+      '<div class="no-msg">⚙️ Buku tamu belum dikonfigurasi.<br><small>Ikuti panduan di dalam file HTML (cari kata "PANDUAN SETUP").</small></div>';
+    return;
+  }
+
+  if (notice) notice.style.display = 'none';
+  document.getElementById('msgList').innerHTML =
+    '<div class="load-msg"><i class="fas fa-spinner fa-spin"></i>&nbsp; Memuat pesan...</div>';
+
+  try {
+    const res  = await fetch(`${JB_BASE}/${JSONBIN_ID}/latest`, { headers: JB_HEAD() });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderMsgs(data.record?.messages || []);
+  } catch (err) {
+    console.error('loadGB error:', err);
+    document.getElementById('msgList').innerHTML =
+      '<div class="no-msg">Gagal memuat pesan. Cek koneksi internet dan konfigurasi JSONBin.</div>';
   }
 }
 
+// Auto-refresh setiap 30 detik agar pesan baru dari tamu lain muncul otomatis
+let gbRefreshTimer = null;
+function startGBRefresh() {
+  clearInterval(gbRefreshTimer);
+  gbRefreshTimer = setInterval(loadGB, 30000);
+}
+
+/* ================================================================
+   SUBMIT PESAN ke JSONBin
+================================================================ */
 async function submitGB(e) {
   e.preventDefault();
-  const name = document.getElementById('gbName').value.trim();
+  const name    = document.getElementById('gbName').value.trim();
   const message = document.getElementById('gbMsg').value.trim();
   if (!name || !message) return;
+
+  if (!GB_READY) {
+    alert('Buku tamu belum dikonfigurasi.\nIkuti panduan di dalam file HTML (cari kata "PANDUAN SETUP").');
+    return;
+  }
 
   const btn = document.getElementById('gbBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
 
-  const local = { id: Date.now().toString(), name, message, ts: Math.floor(Date.now()/1000) };
-
   try {
-    if (fbReady && db) {
-      await db.collection('guestbook').add({ name, message, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-    } else {
-      saveLocalMsg(local);
-      renderMsgs([...getLocalMsgs(),...sampleMsgs.filter(s=>!getLocalMsgs().find(l=>l.id===s.id))]);
-    }
+    /* Langkah 1: ambil data terkini */
+    const r1   = await fetch(`${JB_BASE}/${JSONBIN_ID}/latest`, { headers: JB_HEAD() });
+    if (!r1.ok) throw new Error(`Fetch error ${r1.status}`);
+    const d1   = await r1.json();
+    const msgs = Array.isArray(d1.record?.messages) ? d1.record.messages : [];
+
+    /* Langkah 2: tambahkan pesan baru di posisi paling atas */
+    const now = new Date();
+    msgs.unshift({
+      name,
+      message,
+      date : now.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' }),
+      ts   : now.getTime()
+    });
+
+    /* Langkah 3: simpan kembali ke JSONBin */
+    const r2 = await fetch(`${JB_BASE}/${JSONBIN_ID}`, {
+      method  : 'PUT',
+      headers : JB_HEAD(),
+      body    : JSON.stringify({ messages: msgs })
+    });
+    if (!r2.ok) throw new Error(`Put error ${r2.status}`);
+
+    /* Langkah 4: tampilkan pesan terbaru */
+    renderMsgs(msgs);
     document.getElementById('gbForm').reset();
-    const ok = document.getElementById('gbOk'); ok.classList.add('on');
-    setTimeout(() => ok.classList.remove('on'), 5000);
+    const ok = document.getElementById('gbOk');
+    ok.classList.add('on');
+    setTimeout(() => ok.classList.remove('on'), 6000);
     hearts();
-  } catch(err) {
-    alert('Gagal mengirim pesan. Silakan coba lagi.');
+
+  } catch (err) {
+    console.error('submitGB error:', err);
+    alert('Gagal mengirim pesan. Pastikan Bin ID dan API Key JSONBin sudah benar, lalu coba lagi.');
   }
 
   btn.disabled = false;
@@ -1062,24 +1092,24 @@ async function submitGB(e) {
 
 /* ================================================================
    RSVP via WhatsApp
-   ================================================================ */
+================================================================ */
 function submitRSVP(e) {
   e.preventDefault();
-  const name = document.getElementById('rName').value.trim();
+  const name  = document.getElementById('rName').value.trim();
   const phone = document.getElementById('rPhone').value.trim();
   const att   = document.getElementById('rAtt').value;
   const guest = document.getElementById('rGuest').value;
-  if (!name||!phone||!att||!guest) return;
+  if (!name || !phone || !att || !guest) return;
 
   const msg =
 `*🎊 RSVP Pernikahan Dilla & Majid*
 
 Assalamu'alaikum,
 
-Nama: *${name}*
-No. HP: *${phone}*
-Kehadiran: *${att}*
-Jumlah Tamu: *${guest}*
+Nama       : *${name}*
+No. HP     : *${phone}*
+Kehadiran  : *${att}*
+Jml. Tamu  : *${guest}*
 
 _Dikirim dari undangan digital Dilla & Majid_ 💌`;
 
@@ -1090,20 +1120,28 @@ _Dikirim dari undangan digital Dilla & Majid_ 💌`;
 
 /* ================================================================
    COPY TO CLIPBOARD
-   ================================================================ */
+================================================================ */
 function copyNum(txt, label) {
-  navigator.clipboard.writeText(txt).then(() => toast(`Nomor ${label} berhasil disalin ✓`))
-  .catch(() => { const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast(`Nomor ${label} berhasil disalin ✓`); });
+  navigator.clipboard.writeText(txt)
+    .then(()  => toast(`Nomor ${label} berhasil disalin ✓`))
+    .catch(()  => {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      toast(`Nomor ${label} berhasil disalin ✓`);
+    });
 }
 
 function toast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.style.opacity = '1';
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.opacity = '1';
   setTimeout(() => { t.style.opacity = '0'; }, 3000);
 }
 
 /* ================================================================
    COUNTDOWN
-   ================================================================ */
+================================================================ */
 const wDay = new Date(2025, 5, 14, 7, 0, 0);
 function tick() {
   const diff = wDay - new Date();
@@ -1112,54 +1150,61 @@ function tick() {
     document.getElementById('celebBox').classList.add('on');
     return;
   }
-  const d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000), m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
-  document.getElementById('cdD').textContent=String(d).padStart(2,'0');
-  document.getElementById('cdH').textContent=String(h).padStart(2,'0');
-  document.getElementById('cdM').textContent=String(m).padStart(2,'0');
-  document.getElementById('cdS').textContent=String(s).padStart(2,'0');
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor(diff % 86400000 / 3600000);
+  const m = Math.floor(diff % 3600000  / 60000);
+  const s = Math.floor(diff % 60000    / 1000);
+  document.getElementById('cdD').textContent = String(d).padStart(2,'0');
+  document.getElementById('cdH').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdM').textContent = String(m).padStart(2,'0');
+  document.getElementById('cdS').textContent = String(s).padStart(2,'0');
 }
-setInterval(tick,1000); tick();
+setInterval(tick, 1000); tick();
 
 /* ================================================================
-   COVER / OPEN INVITATION
-   ================================================================ */
-// Guest name from URL ?to=Nama+Tamu
+   COVER / BUKA UNDANGAN
+================================================================ */
 const qp = new URLSearchParams(location.search);
 const gn = qp.get('to');
-if (gn) document.getElementById('guestLabel').innerHTML =
-  `<i class="fas fa-envelope"></i> Kepada: <strong>${decodeURIComponent(gn)}</strong>`;
+if (gn) {
+  document.getElementById('guestLabel').innerHTML =
+    `<i class="fas fa-envelope"></i>&nbsp; Kepada: <strong>${decodeURIComponent(gn)}</strong>`;
+}
 
 function openInvite() {
   document.getElementById('cover').classList.add('out');
   document.getElementById('main').style.display = 'block';
-  document.getElementById('fab').style.display = 'flex';
+  document.getElementById('fab').style.display  = 'flex';
   loadGB();
+  startGBRefresh();
   initReveal();
-  setTimeout(() => { document.getElementById('cover').style.display='none'; }, 950);
+  setTimeout(() => { document.getElementById('cover').style.display = 'none'; }, 950);
   tryPlay();
 }
 
 /* ================================================================
-   MUSIC
-   ================================================================ */
-const mus = document.getElementById('music');
+   MUSIK
+================================================================ */
+const mus  = document.getElementById('music');
 const mBtn = document.getElementById('musicBtn');
 const mIco = document.getElementById('musIco');
 let playing = false;
-mus.volume = 0.38;
+mus.volume  = 0.38;
 
 function tryPlay() {
-  mus.play().then(()=>{ playing=true; mBtn.classList.add('play'); mIco.className='fas fa-pause'; }).catch(()=>{});
+  mus.play()
+    .then(() => { playing = true;  mBtn.classList.add('play');    mIco.className = 'fas fa-pause'; })
+    .catch(() => { /* autoplay blocked — user perlu klik tombol musik */ });
 }
 mBtn.addEventListener('click', () => {
-  if (playing) { mus.pause(); mBtn.classList.remove('play'); mIco.className='fas fa-music'; }
-  else         { mus.play();  mBtn.classList.add('play');    mIco.className='fas fa-pause'; }
+  if (playing) { mus.pause(); mBtn.classList.remove('play'); mIco.className = 'fas fa-music'; }
+  else         { mus.play();  mBtn.classList.add('play');    mIco.className = 'fas fa-pause'; }
   playing = !playing;
 });
 
 /* ================================================================
    NAVBAR SCROLL + BACK-TO-TOP
-   ================================================================ */
+================================================================ */
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', scrollY > 50);
   document.getElementById('btt').classList.toggle('on', scrollY > 300);
@@ -1167,14 +1212,20 @@ window.addEventListener('scroll', () => {
 
 /* ================================================================
    HAMBURGER MENU
-   ================================================================ */
-document.getElementById('ham').addEventListener('click', () => { document.getElementById('mnav').classList.add('open'); document.body.style.overflow='hidden'; });
+================================================================ */
+document.getElementById('ham').addEventListener('click', () => {
+  document.getElementById('mnav').classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
 document.getElementById('mnavClose').addEventListener('click', closeMnav);
-function closeMnav() { document.getElementById('mnav').classList.remove('open'); document.body.style.overflow=''; }
+function closeMnav() {
+  document.getElementById('mnav').classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 /* ================================================================
    REVEAL ON SCROLL
-   ================================================================ */
+================================================================ */
 function initReveal() {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((en, i) => {
@@ -1189,28 +1240,35 @@ function initReveal() {
 
 /* ================================================================
    LIGHTBOX
-   ================================================================ */
+================================================================ */
 function openLb(item) {
   const img = item.querySelector('img');
-  if (!img || !img.src) return;
+  if (!img || !img.src || img.style.display === 'none') return;
   document.getElementById('lbImg').src = img.src;
   document.getElementById('lb').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
-function closeLb() { document.getElementById('lb').classList.remove('on'); document.body.style.overflow=''; }
+function closeLb() {
+  document.getElementById('lb').classList.remove('on');
+  document.body.style.overflow = '';
+}
 
 /* ================================================================
    FLOATING HEARTS
-   ================================================================ */
+================================================================ */
 function hearts() {
   const sym = ['💕','❤️','🌸','✨','💍'];
-  for (let i=0;i<8;i++) setTimeout(()=>{
-    const h = document.createElement('div');
-    h.style.cssText=`position:fixed;left:${10+Math.random()*80}vw;bottom:-40px;font-size:${18+Math.random()*14}px;pointer-events:none;z-index:9998;animation:floatH ${3+Math.random()*2}s ease-out forwards`;
-    h.textContent=sym[Math.floor(Math.random()*sym.length)];
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),5000);
-  }, i*120);
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const h = document.createElement('div');
+      h.style.cssText = `position:fixed;left:${10 + Math.random() * 80}vw;bottom:-40px;` +
+        `font-size:${18 + Math.random() * 14}px;pointer-events:none;z-index:9998;` +
+        `animation:floatH ${3 + Math.random() * 2}s ease-out forwards`;
+      h.textContent = sym[Math.floor(Math.random() * sym.length)];
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 5500);
+    }, i * 120);
+  }
 }
 </script>
 </body>
