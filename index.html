@@ -787,10 +787,10 @@ footer { background:var(--dark); color:rgba(255,255,255,.82); text-align:center;
       <h3><i class="fas fa-pen" style="color:var(--gold);margin-right:.5rem"></i> Kirim Pesan &amp; Doa</h3>
       
       <!-- Privacy note -->
-      <div class="wa-note" style="background:#F0F4FF;border-color:#B0C4DE;margin-bottom:1.5rem">
+      <!-- <div class="wa-note" style="background:#F0F4FF;border-color:#B0C4DE;margin-bottom:1.5rem">
         <i class="fas fa-shield-alt" style="color:#4A7EC7"></i>
         <span style="color:#2C4F82">Pesan diterima langsung oleh pengantin. Nomor & kontak pengantin sepenuhnya terjaga privasinya.</span>
-      </div>
+      </div> -->
 
       <form id="gbForm" onsubmit="submitGB(event)">
         <div class="ff"><label for="gbName">Nama Lengkap</label><input type="text" id="gbName" placeholder="Nama Anda" required></div>
@@ -818,7 +818,7 @@ footer { background:var(--dark); color:rgba(255,255,255,.82); text-align:center;
       <div class="rsvp-box rv">
       <div class="wa-note" style="background:#F0F4FF;border-color:#B0C4DE">
         <i class="fas fa-shield-alt" style="color:#4A7EC7"></i>
-        <span style="color:#2C4F82">Konfirmasi kehadiran Anda diterima langsung oleh pengantin secara privat. Tidak ada redirect ke WhatsApp.</span>
+        <span style="color:#2C4F82">Konfirmasi kehadiran Anda diterima langsung oleh pengantin secara privat.</span>
       </div>
       <form id="rsvpForm" onsubmit="submitRSVP(event)">
         <div class="ff"><label for="rName">Nama Lengkap</label><input type="text" id="rName" placeholder="Nama lengkap Anda" required></div>
@@ -952,8 +952,8 @@ footer { background:var(--dark); color:rgba(255,255,255,.82); text-align:center;
 
 // SUPABASE — untuk Buku Tamu (shared semua perangkat)
 // Panduan: lihat bawah file ini, cari kata PANDUAN SUPABASE
-const SUPABASE_URL = "GANTI_SUPABASE_URL";   // contoh: "https://abcxyz.supabase.co"
-const SUPABASE_KEY = "GANTI_SUPABASE_ANON_KEY"; // kunci anon/public dari Supabase
+const SUPABASE_URL = "https://usmrngewvccqabnsowrn.supabase.co/rest/v1/";   // contoh: "https://abcxyz.supabase.co"
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzbXJuZ2V3dmNjcWFibnNvd3JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NDY0NjMsImV4cCI6MjA5NTIyMjQ2M30.MEcvckg-Gip-Zry8paAPkSyf5rq_u6cHi7rIO82YO60"; // kunci anon/public dari Supabase
 
 // WEB3FORMS — untuk email notifikasi (opsional, backup)
 const W3F_KEY = "GANTI_W3F_KEY"; // dari web3forms.com
@@ -1305,6 +1305,7 @@ function openInvite() {
   document.getElementById('main').style.display = 'block';
   document.getElementById('fab').style.display  = 'flex';
   loadGB();
+  startGBRefresh();
   initReveal();
   setTimeout(() => { document.getElementById('cover').style.display = 'none'; }, 950);
   tryPlay();
